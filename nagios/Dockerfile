@@ -57,13 +57,6 @@ RUN cd /tmp && tar xvzf Net--RabbitMQ-0.2.8.tgz
 RUN cd /tmp/Net--RabbitMQ-0.2.8 && perl Makefile.PL && make && make install
 RUN rm -rf /tmp/Net--RabbitMQ-0.2.8 && rm -rf /tmp/Net--RabbitMQ-0.2.8.tgz
 
-# install postfix to sendmail alert for Nagios
-RUN yum install -y postfix supervisor rsyslog
-RUN sed -i "s/inet_interfaces = localhost/inet_interfaces = all/g" /etc/postfix/main.cf
-RUN echo mynetworks = 172.0.0.0/8, 10.0.0.0/8, 127.0.0.0/8, 192.168.0.0/16 >> /etc/postfix/main.cf
-RUN echo relayhost = monitor1.sli-systems.com >> /etc/postfix/main.cf
-RUN echo myhostname = nagios-chc.sli.io >> /etc/postfix/main.cf
-RUN sed -i "s/mailhub=mail/mailhub=smtp.globalbrain.net:25/g" /etc/ssmtp/ssmtp.conf
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY rsyslog.conf /etc/rsyslog.conf
 COPY listen.conf /etc/rsyslog.d/listen.conf
